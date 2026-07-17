@@ -44,7 +44,14 @@ medical-app/
 -----------------------------------------------------------------------------
 
 ## PROJECT CONFIGURATION
+- [X] Configure static file server
+- [] Setup MySQL in Docker Compose
+- [] Create ER design for database
 
 ## DOCTOR MODULE
 
 ## PATIENT MODULE
+- Register Patient
+
+## FRONT END
+- [X] Create home page

@@ -1,0 +1,64 @@
+{{define "title"}}Welcome - GoCare{{end}}
+
+{{define "content"}}
+<div class="auth-grid">
+    <!-- Left Column: Hero/Info -->
+    <div class="hero-card">
+        <h2>Healthcare simplified for patients and doctors.</h2>
+        <p>Book appointments, manage schedule availability, and access patient medical records securely from any device.</p>
+        <ul class="feature-list">
+            <li><strong>Patients:</strong> Find specialized doctors and schedule visits.</li>
+            <li><strong>Doctors:</strong> Access patient histories and record treatment notes.</li>
+            <li><strong>Secure:</strong> Encrypted records and role-based access control.</li>
+        </ul>
+    </div>
+
+    <!-- Right Column: Login / Register Box -->
+    <div class="auth-card">
+        <!-- Auth Tabs -->
+        <div class="tab-header">
+            <button class="tab-btn active" onclick="switchTab('login')">Log In</button>
+            <button class="tab-btn" onclick="switchTab('register')">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" action="/login" method="POST" class="auth-form active">
+            <h3>Account Login</h3>
+            <div class="form-group">
+                <label for="login-email">Email Address</label>
+                <input type="email" id="login-email" name="email" required placeholder="doctor@gocare.org">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" name="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn primary-btn">Sign In</button>
+        </form>
+
+        <!-- Registration Form -->
+        <form id="register-form" action="/register" method="POST" class="auth-form">
+            <h3>Create Account</h3>
+            <div class="form-group">
+                <label for="reg-name">Full Name</label>
+                <input type="text" id="reg-name" name="name" required placeholder="Dr. Sarah Connor or John Doe">
+            </div>
+            <div class="form-group">
+                <label for="reg-email">Email Address</label>
+                <input type="email" id="reg-email" name="email" required placeholder="your.email@example.com">
+            </div>
+            <div class="form-group">
+                <label for="reg-role">I am a:</label>
+                <select id="reg-role" name="role" required>
+                    <option value="patient">Patient</option>
+                    <option value="doctor">Doctor</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="reg-password">Password</label>
+                <input type="password" id="reg-password" name="password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn primary-btn">Register</button>
+        </form>
+    </div>
+</div>
+{{end}}

@@ -1,0 +1,25 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{block "title" .}}GoCare - Medical Consultations{{end}}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <span class="logo-icon">+</span> GoCare
+        </div>
+        <span class="tagline">Medical Consultation System</span>
+    </header>
+
+    <main class="container">
+        {{template "content" .}}
+    </main>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
+{{end}}
