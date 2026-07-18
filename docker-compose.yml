@@ -1,0 +1,11 @@
+services:
+  gocare-db:
+    image: mysql:9.7.1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: "gocare-db"
+      MYSQL_USER: "admin"
+      MYSQL_PASSWORD: "admin"
+    ports:
+      - "3306:3306"
