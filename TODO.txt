@@ -48,10 +48,12 @@ medical-app/
 - [] Setup MySQL in Docker Compose
 - [] Create ER design for database
 
-## DOCTOR MODULE
-
-## PATIENT MODULE
-- Register Patient
+## USER MODULE
+- [] Register user (they can be doctor or patient)
+    - [] Validate e-mail (format name@domain.com)
+    - [] Validate password (at least 8 characters, should have at least one letter, number and a special character)
+    - [] Password should be hashed before inserted in the database
+    - [] Send confirmation e-mail
 
 ## FRONT END
 - [X] Create home page
