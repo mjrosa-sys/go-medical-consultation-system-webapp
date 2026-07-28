@@ -2,9 +2,11 @@ package user
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 
+	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/render"
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/validator"
 )
 
@@ -45,8 +47,29 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	form.CheckField(validator.NotBlank(form.Role), "role", "A role should be defined")
 	form.CheckField(validator.PermittedValue(form.Role, "patient", "doctor"), "role", "Invalid role")
 
+	form.SetFormName("register")
+
 	if !form.Valid() {
-		fmt.Printf("Nice! No errors: %v\n", form.Validator.FieldErrors)
+		data := render.TemplateData{
+			Validator: form.Validator,
+			User: User{
+				Name:     form.Name,
+				Email:    form.Email,
+				Role:     form.Role,
+				Password: form.Password,
+			},
+		}
+
+		fmt.Println("TESTE: ", form.Email)
+
+		ts, err := template.ParseFiles("./ui/html/base.tmpl", "./ui/html/pages/home.tmpl")
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+
+		ts.ExecuteTemplate(w, "base", data)
+		return
 	}
 
 	w.Write([]byte("Creating new user"))
