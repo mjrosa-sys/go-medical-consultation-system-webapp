@@ -1,0 +1,10 @@
+package render
+
+import (
+	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/validator"
+)
+
+type TemplateData struct {
+	Validator validator.Validator
+	User      any
+}
