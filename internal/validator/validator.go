@@ -1,28 +1,39 @@
 package validator
 
 import (
-	"net/mail"
+	"regexp"
 	"slices"
 	"strings"
 	"unicode"
 	"unicode/utf8"
 )
 
+type FieldErrors map[string]string
+
 type Validator struct {
-	FieldErrors map[string]string
+	FormName string
+	Errors   FieldErrors
+}
+
+func (v *Validator) SetFormName(name string) {
+	v.FormName = name
+}
+
+func (v *Validator) GetFormName() string {
+	return v.FormName
 }
 
 func (v *Validator) Valid() bool {
-	return len(v.FieldErrors) == 0
+	return len(v.Errors) == 0
 }
 
 func (v *Validator) AddFieldError(key, errMessage string) {
-	if v.FieldErrors == nil {
-		v.FieldErrors = make(map[string]string)
+	if v.Errors == nil {
+		v.Errors = make(map[string]string)
 	}
 
-	if _, exists := v.FieldErrors[key]; !exists {
-		v.FieldErrors[key] = errMessage
+	if _, exists := v.Errors[key]; !exists {
+		v.Errors[key] = errMessage
 	}
 }
 
@@ -45,8 +56,13 @@ func PermittedValue[T comparable](fieldValue T, PermittedValues ...T) bool {
 }
 
 func ValidEmail(fieldValue string) bool {
-	_, err := mail.ParseAddress(fieldValue)
-	return err == nil
+	emailRX := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+
+	if len(fieldValue) > 254 {
+		return false
+	}
+	return emailRX.MatchString(fieldValue)
+
 }
 
 func ValidPassword(fieldValue string) bool {
