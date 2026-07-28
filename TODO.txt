@@ -45,13 +45,16 @@ medical-app/
 
 ## PROJECT CONFIGURATION
 - [X] Configure static file server
-- [] Setup MySQL in Docker Compose
-- [] Create ER design for database
+- [X] Setup MySQL in Docker Compose
+- [] Create a custom logger function
 
 ## USER MODULE
-- [] Register user (they can be doctor or patient)
-    - [] Validate e-mail (format name@domain.com)
-    - [] Validate password (at least 8 characters, should have at least one letter, number and a special character)
+- [] Register user (they can be doctor or patient): POST /register
+    - [X] Validate e-mail (format name@domain.com)
+    - [X] User name should be 100 characters long at most
+    - [X] Validate password (at least 8 characters, should have at least one letter and one number)
+    - [X] Validate that all form fields are not empty
+    - [X] Validate that role field has value "doctor" or "patient" only
     - [] Password should be hashed before inserted in the database
     - [] Send confirmation e-mail
 
