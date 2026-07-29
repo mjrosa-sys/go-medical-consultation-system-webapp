@@ -47,6 +47,8 @@ medical-app/
 - [X] Configure static file server
 - [X] Setup MySQL in Docker Compose
 - [] Create a custom logger function
+- [X] Create configuration variables as CLI flags (-port, -dsn etc...)
+- [X] Connect the app to MySQL and provide access to it via Dependency Injection
 
 ## USER MODULE
 - [] Register user (they can be doctor or patient): POST /register
