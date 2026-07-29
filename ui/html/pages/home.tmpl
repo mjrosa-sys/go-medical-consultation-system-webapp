@@ -15,113 +15,76 @@
 
     <!-- Right Column: Login / Register Box -->
     <div class="auth-card">
-        {{if (.Validator.Errors | and (eq .Validator.FormName "register")) }}
-        <!-- Auth Tabs -->
+        
+        <!-- Auth Tabs: Dynamically add 'active' based on FormName -->
         <div class="tab-header">
-            <button class="tab-btn" onclick="switchTab('login')">Log In</button>
-            <button class="tab-btn active" onclick="switchTab('register')">Register</button>
+            <button class="tab-btn {{if ne .Validator.FormName "register"}}active{{end}}" onclick="switchTab('login')">Log In</button>
+            <button class="tab-btn {{if eq .Validator.FormName "register"}}active{{end}}" onclick="switchTab('register')">Register</button>
         </div>
-        {{else}}
-        <div class="tab-header">
-            <button class="tab-btn active" onclick="switchTab('login')">Log In</button>
-            <button class="tab-btn" onclick="switchTab('register')">Register</button>
-        </div>
-        {{end}}
 
-
-        {{if (.Validator.Errors | and (eq .Validator.FormName "register")) }}
         <!-- Login Form -->
-        <form id="login-form" action="/login" method="POST" class="auth-form">
+        <form id="login-form" action="/login" method="POST" class="auth-form {{if ne .Validator.FormName "register"}}active{{end}}">
             <h3>Account Login</h3>
+            
             <div class="form-group">
                 <label for="login-email">Email Address</label>
                 <input type="email" id="login-email" name="email" required placeholder="doctor@gocare.org">
             </div>
+            
             <div class="form-group">
                 <label for="login-password">Password</label>
                 <input type="password" id="login-password" name="password" required placeholder="••••••••">
             </div>
+            
             <button type="submit" class="btn primary-btn">Sign In</button>
         </form>
 
         <!-- Registration Form -->
-        <form id="register-form" action="/register" method="POST" class="auth-form active">
+        <form id="register-form" action="/register" method="POST" class="auth-form {{if eq .Validator.FormName "register"}}active{{end}}">
             <h3>Create Account</h3>
+            
+            <!-- Full Name -->
             <div class="form-group">
                 <label for="reg-name">Full Name</label>
-                {{if .Validator.Errors.name}}
-                <input type="text" id="reg-name" value="{{.User.Name}}" name="name" required placeholder="Dr. Sarah Connor or John Doe">
-                <p style="color: red;">{{.Validator.Errors.name}}</p>
-                {{else}}
-                <input type="text" id="reg-name" value="{{.User.Name}}" name="name" required placeholder="Dr. Sarah Connor or John Doe">
+                <input type="text" id="reg-name" name="name" value="{{.User.Name}}" required placeholder="Dr. Sarah Connor or John Doe">
+                {{with .Validator.Errors.name}}
+                    <p style="color: red; margin-top: 4px;">{{.}}</p>
                 {{end}}
             </div>
+            
+            <!-- Email -->
             <div class="form-group">
                 <label for="reg-email">Email Address</label>
-                {{if .Validator.Errors.email}}
-                <input type="email" id="reg-email" value="{{.User.Email}}" name="email" required placeholder="your.email@example.com">
-                <p style="color: red;">{{.Validator.Errors.email}}</p>
-                {{else}}
                 <input type="email" id="reg-email" name="email" value="{{.User.Email}}" required placeholder="your.email@example.com">
+                {{with .Validator.Errors.email}}
+                    <p style="color: red; margin-top: 4px;">{{.}}</p>
                 {{end}}
             </div>
+            
+            <!-- Role -->
             <div class="form-group">
                 <label for="reg-role">I am a:</label>
                 <select id="reg-role" name="role" required>
-                    <option value="patient">Patient</option>
-                    <option value="doctor">Doctor</option>
+                    <option value="patient" {{if eq .User.Role "patient"}}selected{{end}}>Patient</option>
+                    <option value="doctor" {{if eq .User.Role "doctor"}}selected{{end}}>Doctor</option>
                 </select>
+                {{with .Validator.Errors.role}}
+                    <p style="color: red; margin-top: 4px;">{{.}}</p>
+                {{end}}
             </div>
+            
+            <!-- Password -->
             <div class="form-group">
                 <label for="reg-password">Password</label>
                 <input type="password" id="reg-password" name="password" required placeholder="••••••••">
-                {{with .Validator.Errors.password}}<p style="color: red;">{{.}}</p>{{end}}
+                {{with .Validator.Errors.password}}
+                    <p style="color: red; margin-top: 4px;">{{.}}</p>
+                {{end}}
             </div>
+            
             <button type="submit" class="btn primary-btn">Register</button>
         </form>
 
-        {{else}}
-
-        <!-- Login Form -->
-        <form id="login-form" action="/login" method="POST" class="auth-form active">
-            <h3>Account Login</h3>
-            <div class="form-group">
-                <label for="login-email">Email Address</label>
-                <input type="email" id="login-email" name="email" required placeholder="doctor@gocare.org">
-            </div>
-            <div class="form-group">
-                <label for="login-password">Password</label>
-                <input type="password" id="login-password" name="password" required placeholder="••••••••">
-            </div>
-            <button type="submit" class="btn primary-btn">Sign In</button>
-        </form>
-
-        <!-- Registration Form -->
-        <form id="register-form" action="/register" method="POST" class="auth-form">
-            <h3>Create Account</h3>
-            <div class="form-group">
-                <label for="reg-name">Full Name</label>
-                <input type="text" id="reg-name" name="name" required placeholder="Dr. Sarah Connor or John Doe">
-            </div>
-            <div class="form-group">
-                <label for="reg-email">Email Address</label>
-                <input type="email" id="reg-email" name="email" required placeholder="your.email@example.com">
-            </div>
-            <div class="form-group">
-                <label for="reg-role">I am a:</label>
-                <select id="reg-role" name="role" required>
-                    <option value="patient">Patient</option>
-                    <option value="doctor">Doctor</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="reg-password">Password</label>
-                <input type="password" id="reg-password" name="password" required placeholder="••••••••">
-            </div>
-            <button type="submit" class="btn primary-btn">Register</button>
-        </form>
- 
-        {{end}}
     </div>
 </div>
 {{end}}

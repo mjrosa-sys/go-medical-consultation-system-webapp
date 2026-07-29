@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -59,8 +58,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 				Password: form.Password,
 			},
 		}
-
-		fmt.Println("TESTE: ", form.Email)
 
 		ts, err := template.ParseFiles("./ui/html/base.tmpl", "./ui/html/pages/home.tmpl")
 		if err != nil {
