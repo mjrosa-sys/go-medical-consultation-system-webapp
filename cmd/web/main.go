@@ -10,11 +10,13 @@ import (
 func main() {
 	mux := http.NewServeMux()
 
+	userHandler := user.NewHandler(nil)
+
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
 
 	mux.HandleFunc("GET /{$}", home)
-	mux.HandleFunc("POST /register", user.Register)
+	mux.HandleFunc("POST /register", userHandler.Register)
 
 	log.Println("Server running localhost:3001")
 

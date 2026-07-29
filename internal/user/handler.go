@@ -1,6 +1,7 @@
 package user
 
 import (
+	"database/sql"
 	"html/template"
 	"log"
 	"net/http"
@@ -17,7 +18,17 @@ type registerForm struct {
 	validator.Validator
 }
 
-func Register(w http.ResponseWriter, r *http.Request) {
+type Handler struct {
+	DB *sql.DB
+}
+
+func NewHandler(db *sql.DB) *Handler {
+	return &Handler{
+		DB: db,
+	}
+}
+
+func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Error passing form", http.StatusBadRequest)
 		return
