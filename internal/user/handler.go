@@ -59,17 +59,17 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 
 	form.SetFormName("register")
 
-	if !form.Valid() {
-		data := render.TemplateData{
-			Validator: form.Validator,
-			User: User{
-				Name:     form.Name,
-				Email:    form.Email,
-				Role:     form.Role,
-				Password: form.Password,
-			},
-		}
+	data := render.TemplateData{
+		Validator: form.Validator,
+		User: User{
+			Name:     form.Name,
+			Email:    form.Email,
+			Role:     form.Role,
+			Password: form.Password,
+		},
+	}
 
+	if !form.Valid() {
 		ts, err := template.ParseFiles("./ui/html/base.tmpl", "./ui/html/pages/home.tmpl")
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -79,6 +79,16 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 		ts.ExecuteTemplate(w, "base", data)
 		return
 	}
+
+	userModel := UserModel{DB: h.DB}
+
+	id, err := userModel.Insert(form.Name, form.Email, form.Role, form.Password)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("User created. ID: %d\n", id)
 
 	w.Write([]byte("Creating new user"))
 }
