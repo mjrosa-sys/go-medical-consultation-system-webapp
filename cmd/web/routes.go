@@ -6,7 +6,7 @@ import (
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/user"
 )
 
-func (app *application) routes() *http.ServeMux {
+func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
 	userHandler := user.NewHandler(app.db)
@@ -17,5 +17,5 @@ func (app *application) routes() *http.ServeMux {
 	mux.HandleFunc("GET /{$}", home)
 	mux.HandleFunc("POST /register", userHandler.Register)
 
-	return mux
+	return commonHeaders(mux)
 }
