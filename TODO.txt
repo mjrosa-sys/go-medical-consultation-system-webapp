@@ -8,7 +8,7 @@
 - [] Create a custom logger function
 - [X] Create configuration variables as CLI flags (-port, -dsn etc...)
 - [X] Connect the app to MySQL and provide access to it via Dependency Injection
-- [ ] Configure a self-signed HTTPS server
+- [X] Configure a self-signed HTTPS server
 
 ## USER MODULE
 - [] Register user (they can be doctor or patient): POST /register
