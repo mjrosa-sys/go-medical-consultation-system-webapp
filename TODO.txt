@@ -18,7 +18,7 @@
     - [X] Validate that all form fields are not empty
     - [X] Validate that role field has value "doctor" or "patient" only
     - [] Password should be hashed before inserted in the database
-    - [] Render invalid form fields
+    - [X] Render invalid form fields
     - [] Send confirmation e-mail
 
 ## FRONT END
