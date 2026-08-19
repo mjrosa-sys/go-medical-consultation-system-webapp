@@ -35,9 +35,17 @@ func main() {
 
 	app.db = db
 
+	srv := &http.Server{
+		Addr:         app.flags.port,
+		Handler:      app.routes(),
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
 	log.Printf("Server running localhost%s\n", app.flags.port)
 
-	err = http.ListenAndServe(app.flags.port, app.routes())
+	err = srv.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
