@@ -8,6 +8,7 @@ import (
 
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/render"
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/validator"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type registerForm struct {
@@ -62,10 +63,9 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	data := render.TemplateData{
 		Validator: form.Validator,
 		User: User{
-			Name:     form.Name,
-			Email:    form.Email,
-			Role:     form.Role,
-			Password: form.Password,
+			Name:  form.Name,
+			Email: form.Email,
+			Role:  form.Role,
 		},
 	}
 
@@ -82,7 +82,14 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 
 	userModel := UserModel{DB: h.DB}
 
-	id, err := userModel.Insert(form.Name, form.Email, form.Role, form.Password)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(form.Password), 14)
+	if err != nil {
+		log.Printf("Password hashing failed\n")
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	id, err := userModel.Insert(form.Name, form.Email, form.Role, string(hashedPassword))
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return

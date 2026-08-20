@@ -17,9 +17,10 @@
     - [X] Validate password (at least 8 characters, should have at least one letter and one number)
     - [X] Validate that all form fields are not empty
     - [X] Validate that role field has value "doctor" or "patient" only
-    - [] Password should be hashed before inserted in the database
+    - [X] Password should be hashed before inserted in the database
     - [X] Render invalid form fields
     - [] Send confirmation e-mail
+    - [] Authenticate user after registration
 
 ## FRONT END
 - [X] Create home page
