@@ -28,12 +28,18 @@
             
             <div class="form-group">
                 <label for="login-email">Email Address</label>
-                <input type="email" id="login-email" name="email" required placeholder="doctor@gocare.org">
+                <input type="email" id="login-email" name="email" value="{{.User.Email}}" required placeholder="doctor@gocare.org">
+                {{with .Validator.Errors.email}}
+                    <p style="color: red; margin-top: 4px;">{{.}}</p>
+                {{end}}
             </div>
             
             <div class="form-group">
                 <label for="login-password">Password</label>
                 <input type="password" id="login-password" name="password" required placeholder="••••••••">
+                {{with .Validator.Errors.password}}
+                    <p style="color: red; margin-top: 4px;">{{.}}</p>
+                {{end}}
             </div>
             
             <button type="submit" class="btn primary-btn">Sign In</button>

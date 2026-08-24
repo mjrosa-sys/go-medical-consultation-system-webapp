@@ -20,6 +20,12 @@ type registerForm struct {
 	validator.Validator
 }
 
+type loginForm struct {
+	Email    string
+	Password string
+	validator.Validator
+}
+
 type Handler struct {
 	DB             *sql.DB
 	SessionManager *scs.SessionManager
@@ -110,4 +116,53 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 
+}
+
+func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	form := loginForm{
+		Email:    r.PostForm.Get("email"),
+		Password: r.PostForm.Get("password"),
+	}
+
+	form.SetFormName("login")
+
+	form.CheckField(validator.NotBlank(form.Email), "email", "Email field cannot be empty")
+	form.CheckField(validator.MaxChars(form.Email, 256), "email", "Email cannot be more than 256 characters long")
+	form.CheckField(validator.ValidEmail(form.Email), "email", "Email format is not valid")
+
+	form.CheckField(validator.NotBlank(form.Password), "password", "Password field cannot be empty")
+	form.CheckField(validator.MaxChars(form.Password, 100), "password", "Password cannot be more than 100 characters long")
+	form.CheckField(validator.ValidPassword(form.Password), "password", "Password should contain at least one digit and character, and be 8 characters long")
+
+	data := render.TemplateData{
+		Validator: form.Validator,
+		User: User{
+			Email: form.Email,
+		},
+	}
+
+	if !form.Valid() {
+		ts, err := template.ParseFiles("./ui/html/base.tmpl", "./ui/html/pages/home.tmpl")
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+
+		err = ts.ExecuteTemplate(w, "base", data)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+
+		return
+	}
+
+	log.Printf("USER LOGIN: %v\n", form)
+
+	w.Write([]byte("Login handler reached!"))
 }

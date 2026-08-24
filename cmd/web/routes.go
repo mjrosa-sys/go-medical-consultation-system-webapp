@@ -17,6 +17,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("GET /{$}", app.redirectIfAuthenticated(http.HandlerFunc(home)))
 
 	mux.HandleFunc("POST /register", userHandler.Register)
+	mux.HandleFunc("POST /login", userHandler.Login)
 
 	mux.Handle("GET /dashboard", app.requireAuthentication(http.HandlerFunc(dashboard)))
 
