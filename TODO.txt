@@ -21,6 +21,7 @@
     - [X] Render invalid form fields
     - [X] Authenticate user after registration
 - [ ] Login  user: POST /login
+    - [X] Validate login form
     - [ ] Check if password and email are corrects
     - [ ] Create authenticated session and redirect to dashboard
 - [ ] Logout user: POST /login
@@ -28,3 +29,4 @@
 
 ## FRONT END
 - [X] Create home page
+- [X] Create dashboard page
