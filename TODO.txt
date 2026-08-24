@@ -19,8 +19,12 @@
     - [X] Validate that role field has value "doctor" or "patient" only
     - [X] Password should be hashed before inserted in the database
     - [X] Render invalid form fields
-    - [] Send confirmation e-mail
-    - [] Authenticate user after registration
+    - [X] Authenticate user after registration
+- [ ] Login  user: POST /login
+    - [ ] Check if password and email are corrects
+    - [ ] Create authenticated session and redirect to dashboard
+- [ ] Logout user: POST /login
+    - [ ] Delete user session id
 
 ## FRONT END
 - [X] Create home page
