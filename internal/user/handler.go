@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/render"
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/validator"
 	"golang.org/x/crypto/bcrypt"
@@ -20,12 +21,14 @@ type registerForm struct {
 }
 
 type Handler struct {
-	DB *sql.DB
+	DB             *sql.DB
+	SessionManager *scs.SessionManager
 }
 
-func NewHandler(db *sql.DB) *Handler {
+func NewHandler(db *sql.DB, sm *scs.SessionManager) *Handler {
 	return &Handler{
-		DB: db,
+		DB:             db,
+		SessionManager: sm,
 	}
 }
 
@@ -52,7 +55,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	form.CheckField(validator.ValidEmail(form.Email), "email", "Email format is not valid")
 
 	form.CheckField(validator.NotBlank(form.Password), "password", "Password field cannot be empty")
-	form.CheckField(validator.MaxChars(form.Password, 100), "password", "Password cannot be more than 256 characters long")
+	form.CheckField(validator.MaxChars(form.Password, 100), "password", "Password cannot be more than 100 characters long")
 	form.CheckField(validator.ValidPassword(form.Password), "password", "Password should contain at least one digit and character, and be 8 characters long")
 
 	form.CheckField(validator.NotBlank(form.Role), "role", "A role should be defined")
@@ -97,5 +100,14 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("User created. ID: %d\n", id)
 
-	w.Write([]byte("Creating new user"))
+	err = h.SessionManager.RenewToken(r.Context())
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	h.SessionManager.Put(r.Context(), "authenticatedUserID", id)
+
+	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+
 }

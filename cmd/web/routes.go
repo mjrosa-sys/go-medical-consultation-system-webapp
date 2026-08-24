@@ -14,11 +14,11 @@ func (app *application) routes() http.Handler {
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
 
-	mux.HandleFunc("GET /{$}", home)
+	mux.Handle("GET /{$}", app.redirectIfAuthenticated(http.HandlerFunc(home)))
 
 	mux.HandleFunc("POST /register", userHandler.Register)
 
-	mux.HandleFunc("GET /dashboard", dashboard)
+	mux.Handle("GET /dashboard", app.requireAuthentication(http.HandlerFunc(dashboard)))
 
 	return commonHeaders(app.sessionManager.LoadAndSave(mux))
 }

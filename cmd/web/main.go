@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/alexedwards/scs/mysqlstore"
+	"github.com/alexedwards/scs/v2"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -16,8 +18,9 @@ type flags struct {
 }
 
 type application struct {
-	flags flags
-	db    *sql.DB
+	flags          flags
+	db             *sql.DB
+	sessionManager *scs.SessionManager
 }
 
 func main() {
@@ -34,6 +37,15 @@ func main() {
 	defer db.Close()
 
 	app.db = db
+
+	sessionManager := scs.New()
+	sessionManager.Store = mysqlstore.New(db)
+	sessionManager.Lifetime = 12 * time.Hour
+	sessionManager.Cookie.SameSite = http.SameSiteLaxMode
+	sessionManager.Cookie.HttpOnly = true
+	sessionManager.Cookie.Secure = true
+
+	app.sessionManager = sessionManager
 
 	srv := &http.Server{
 		Addr:         app.flags.port,
