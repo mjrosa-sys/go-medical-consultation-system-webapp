@@ -1,0 +1,55 @@
+{{define "title"}}Doctor Dashboard - GoCare{{end}}
+
+{{define "content"}}
+<div class="dashboard-container">
+    <header class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div>
+            <h2>Doctor Dashboard</h2>
+            <p style="color: #666;">Logged in as <strong>Dr. Sarah Connor</strong> (Doctor)</p>
+        </div>
+        <button type="button" class="btn danger-btn" style="background-color: #dc3545; color: white; border: none; padding: 0.4rem 0.8rem; font-size: 0.9rem; border-radius: 4px; cursor: pointer; width: auto; margin-left: auto;">Log Out</button>
+    </header>
+
+    <section class="appointments-list">
+        <h3>System-Wide Appointments</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; border: 1px solid #ddd;">
+            <thead>
+                <tr style="background-color: #f2f2f2; text-align: left;">
+                    <th style="padding: 12px; border-bottom: 1px solid #ddd;">ID</th>
+                    <th style="padding: 12px; border-bottom: 1px solid #ddd;">Patient Name</th>
+                    <th style="padding: 12px; border-bottom: 1px solid #ddd;">Assigned Doctor</th>
+                    <th style="padding: 12px; border-bottom: 1px solid #ddd;">Date & Time</th>
+                    <th style="padding: 12px; border-bottom: 1px solid #ddd;">Status</th>
+                    <th style="padding: 12px; border-bottom: 1px solid #ddd;">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">#101</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Lalatina Dustiness</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Dr. Sarah Connor</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Aug 25, 2026 - 10:00 AM</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;"><span style="color: green; font-weight: bold;">Confirmed</span></td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Routine annual physical exam</td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">#102</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">John Doe</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Dr. Soylita</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Aug 26, 2026 - 02:30 PM</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;"><span style="color: orange; font-weight: bold;">Pending</span></td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Follow-up consultation</td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">#103</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Bruce Wayne</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Dr. Sarah Connor</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Aug 27, 2026 - 11:15 AM</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;"><span style="color: green; font-weight: bold;">Confirmed</span></td>
+                    <td style="padding: 12px; border-bottom: 1px solid #ddd;">Joint and muscle checkup</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+{{end}}

@@ -9,13 +9,16 @@ import (
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
-	userHandler := user.NewHandler(app.db)
+	userHandler := user.NewHandler(app.db, app.sessionManager)
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
 
 	mux.HandleFunc("GET /{$}", home)
+
 	mux.HandleFunc("POST /register", userHandler.Register)
 
-	return commonHeaders(mux)
+	mux.HandleFunc("GET /dashboard", dashboard)
+
+	return commonHeaders(app.sessionManager.LoadAndSave(mux))
 }
