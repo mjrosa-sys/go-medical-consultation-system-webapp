@@ -140,6 +140,26 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	form.CheckField(validator.MaxChars(form.Password, 100), "password", "Password cannot be more than 100 characters long")
 	form.CheckField(validator.ValidPassword(form.Password), "password", "Password should contain at least one digit and character, and be 8 characters long")
 
+	// GetUserByEmail. Se não existe, adiciona o erro ao validator.Errors
+	// bcrypt.Compare. Se retornar erro, adiciona ao validator.Errors
+
+	userModel := UserModel{DB: h.DB}
+
+	user, err := userModel.GetUserByEmail(form.Email)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	if _, ok := form.Errors["email"]; user == nil && !ok {
+		form.AddFieldError("email", "Email not registered")
+	}
+
+	log.Println("teste: ", user)
+
+	log.Printf("USER LOGIN: %v\n", form)
+
 	data := render.TemplateData{
 		Validator: form.Validator,
 		User: User{
@@ -161,8 +181,6 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-
-	log.Printf("USER LOGIN: %v\n", form)
 
 	w.Write([]byte("Login handler reached!"))
 }

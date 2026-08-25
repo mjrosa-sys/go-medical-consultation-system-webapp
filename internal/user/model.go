@@ -2,14 +2,18 @@ package user
 
 import (
 	"database/sql"
+	"errors"
 	"log"
+	"time"
 )
 
 type User struct {
-	Name     string
-	Email    string
-	Role     string
-	Password string
+	ID             int
+	Name           string
+	Email          string
+	HashedPassword string
+	Role           string
+	CreatedAt      time.Time
 }
 
 type UserModel struct {
@@ -32,4 +36,21 @@ func (u *UserModel) Insert(name, email, role, password string) (int, error) {
 	}
 
 	return int(id), nil
+}
+
+func (u *UserModel) GetUserByEmail(email string) (*User, error) {
+	stmt := "select id, name, email, hashed_password, role, created_at from users where email = ?;"
+	row := u.DB.QueryRow(stmt, email)
+
+	user := User{}
+
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.HashedPassword, &user.Role, &user.CreatedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &user, nil
 }

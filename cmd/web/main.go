@@ -27,7 +27,7 @@ func main() {
 	app := application{}
 
 	flag.StringVar(&app.flags.port, "port", ":3001", "Port where the application is gonna run.")
-	flag.StringVar(&app.flags.dsn, "dsn", "gocare_app:123@tcp(localhost:3306)/gocare-db", "MySQL data source name")
+	flag.StringVar(&app.flags.dsn, "dsn", "gocare_app:123@tcp(localhost:3306)/gocare-db?parseTime=true", "MySQL data source name")
 	flag.Parse()
 
 	db, err := openDB(app.flags.dsn)
