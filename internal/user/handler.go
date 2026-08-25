@@ -40,6 +40,7 @@ func NewHandler(db *sql.DB, sm *scs.SessionManager) *Handler {
 
 func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
+		log.Println(err)
 		http.Error(w, "Error passing form", http.StatusBadRequest)
 		return
 	}
@@ -81,6 +82,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	if !form.Valid() {
 		ts, err := template.ParseFiles("./ui/html/base.tmpl", "./ui/html/pages/home.tmpl")
 		if err != nil {
+			log.Println(err)
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
@@ -94,12 +96,14 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(form.Password), 14)
 	if err != nil {
 		log.Printf("Password hashing failed\n")
+		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
 	id, err := userModel.Insert(form.Name, form.Email, form.Role, string(hashedPassword))
 	if err != nil {
+		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -108,6 +112,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 
 	err = h.SessionManager.RenewToken(r.Context())
 	if err != nil {
+		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -121,6 +126,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
+		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -156,7 +162,12 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		form.AddFieldError("email", "Email not registered")
 	}
 
-	log.Println("teste: ", user)
+	if user != nil {
+		err := bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(form.Password))
+		if _, ok := form.Errors["password"]; err != nil && !ok {
+			form.AddFieldError("password", "Wrong password")
+		}
+	}
 
 	log.Printf("USER LOGIN: %v\n", form)
 
@@ -170,17 +181,28 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	if !form.Valid() {
 		ts, err := template.ParseFiles("./ui/html/base.tmpl", "./ui/html/pages/home.tmpl")
 		if err != nil {
+			log.Println(err)
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
 		err = ts.ExecuteTemplate(w, "base", data)
 		if err != nil {
+			log.Println(err)
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
 
 		return
 	}
 
-	w.Write([]byte("Login handler reached!"))
+	err = h.SessionManager.RenewToken(r.Context())
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	h.SessionManager.Put(r.Context(), "authenticatedUserID", user.ID)
+
+	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }

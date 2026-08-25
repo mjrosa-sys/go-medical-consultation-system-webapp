@@ -22,8 +22,8 @@
     - [X] Authenticate user after registration
 - [ ] Login  user: POST /login
     - [X] Validate login form
-    - [ ] Check if password and email are corrects
-    - [ ] Create authenticated session and redirect to dashboard
+    - [X] Check if password and email are corrects
+    - [X] Create authenticated session and redirect to dashboard
 - [ ] Logout user: POST /login
     - [ ] Delete user session id
 
