@@ -18,6 +18,7 @@ func (app *application) routes() http.Handler {
 
 	mux.HandleFunc("POST /register", userHandler.Register)
 	mux.HandleFunc("POST /login", userHandler.Login)
+	mux.HandleFunc("POST /logout", userHandler.Logout)
 
 	mux.Handle("GET /dashboard", app.requireAuthentication(http.HandlerFunc(dashboard)))
 

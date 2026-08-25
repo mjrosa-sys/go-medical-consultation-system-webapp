@@ -206,3 +206,14 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
+
+func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
+	err := h.SessionManager.Destroy(r.Context())
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}

@@ -24,8 +24,9 @@
     - [X] Validate login form
     - [X] Check if password and email are corrects
     - [X] Create authenticated session and redirect to dashboard
-- [ ] Logout user: POST /login
-    - [ ] Delete user session id
+- [X] Logout user: POST /logout
+    - [X] Delete user session from the database
+    - [X] Delete user session from the browser
 
 ## FRONT END
 - [X] Create home page
