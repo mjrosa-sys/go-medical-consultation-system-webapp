@@ -11,7 +11,7 @@
 - [X] Configure a self-signed HTTPS server
 
 ## USER MODULE
-- [] Register user (they can be doctor or patient): POST /register
+- [X] Register user (they can be doctor or patient): POST /register
     - [X] Validate e-mail (format name@domain.com)
     - [X] User name should be 100 characters long at most
     - [X] Validate password (at least 8 characters, should have at least one letter and one number)
@@ -20,14 +20,19 @@
     - [X] Password should be hashed before inserted in the database
     - [X] Render invalid form fields
     - [X] Authenticate user after registration
-- [ ] Login  user: POST /login
+- [X] Login  user: POST /login
     - [X] Validate login form
     - [X] Check if password and email are corrects
     - [X] Create authenticated session and redirect to dashboard
 - [X] Logout user: POST /logout
     - [X] Delete user session from the database
     - [X] Delete user session from the browser
+## APPOINTMENT MODULE
+- [ ] Create new appointments (doctors only)
+- [ ] Display appointments in the dashboard. Doctors see all appointments, whereas patients see only the appointments assigned to them.
 
 ## FRONT END
 - [X] Create home page
 - [X] Create dashboard page
+    - [ ] Create doctor view
+    - [ ] Create patient view
