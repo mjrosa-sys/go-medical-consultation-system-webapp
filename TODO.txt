@@ -29,6 +29,12 @@
     - [X] Delete user session from the browser
 ## APPOINTMENT MODULE
 - [ ] Create new appointments (doctors only)
+    - [ ] Validate new appointment form
+        - [ ] Patient name must exists in the database
+        - [ ] Assigned doctor name must exists in the database
+        - [ ] Notes should not be more than 256 characters long
+        - [ ] Patient and doctor names should not be more than 100 characters long
+        - [ ] The authenticated user sending the form must be a doctor
 - [ ] Display appointments in the dashboard. Doctors see all appointments, whereas patients see only the appointments assigned to them.
 
 ## FRONT END
