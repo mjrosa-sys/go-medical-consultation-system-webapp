@@ -12,22 +12,13 @@
         </form>
     </header>
 
-    <!-- New Appointment Creation Form -->
     <section class="create-appointment-section" style="background: #ffffff; padding: 1.5rem; border-radius: 6px; border: 1px solid #ddd; margin-bottom: 2rem;">
         <h3 style="margin-top: 0; margin-bottom: 1rem;">Schedule New Appointment</h3>
         <form action="/appointments/create" method="POST" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
-            
+
             <div>
                 <label for="patient_name" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Patient Name</label>
                 <input type="text" id="patient_name" name="patient_name" placeholder="e.g., Jane Doe" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-            </div>
-
-            <div>
-                <label for="doctor_name" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Assigned Doctor</label>
-                <select id="doctor_name" name="doctor_name" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-                    <option value="Dr. Sarah Connor">Dr. Sarah Connor</option>
-                    <option value="Dr. Soylita">Dr. Soylita</option>
-                </select>
             </div>
 
             <div>
