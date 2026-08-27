@@ -30,6 +30,12 @@ func NewHandler(DB *sql.DB, sm *scs.SessionManager) *Handler {
 }
 
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
+	//	doctorID := h.SessionManager.GetInt(r.Context(), "authenticatedUserID")
+	//	if doctorID == 0 {
+	//		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+	//		return
+	//	}
+
 	err := r.ParseForm()
 	if err != nil {
 		log.Println(err)

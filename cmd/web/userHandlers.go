@@ -1,12 +1,11 @@
-package user
+package main
 
 import (
-	"database/sql"
 	"html/template"
 	"log"
 	"net/http"
 
-	"github.com/alexedwards/scs/v2"
+	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/models"
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/render"
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/validator"
 	"golang.org/x/crypto/bcrypt"
@@ -26,19 +25,7 @@ type loginForm struct {
 	validator.Validator
 }
 
-type Handler struct {
-	DB             *sql.DB
-	SessionManager *scs.SessionManager
-}
-
-func NewHandler(db *sql.DB, sm *scs.SessionManager) *Handler {
-	return &Handler{
-		DB:             db,
-		SessionManager: sm,
-	}
-}
-
-func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
+func (app *application) UserRegister(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		log.Println(err)
 		http.Error(w, "Error passing form", http.StatusBadRequest)
@@ -72,7 +59,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 
 	data := render.TemplateData{
 		Validator: form.Validator,
-		User: User{
+		User: models.User{
 			Name:  form.Name,
 			Email: form.Email,
 			Role:  form.Role,
@@ -91,7 +78,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userModel := UserModel{DB: h.DB}
+	userModel := models.UserModel{DB: app.db}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(form.Password), 14)
 	if err != nil {
@@ -110,20 +97,20 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("User created. ID: %d\n", id)
 
-	err = h.SessionManager.RenewToken(r.Context())
+	err = app.sessionManager.RenewToken(r.Context())
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
-	h.SessionManager.Put(r.Context(), "authenticatedUserID", id)
+	app.sessionManager.Put(r.Context(), "authenticatedUserID", id)
 
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 
 }
 
-func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
+func (app *application) UserLogin(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Println(err)
@@ -149,7 +136,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	// GetUserByEmail. Se não existe, adiciona o erro ao validator.Errors
 	// bcrypt.Compare. Se retornar erro, adiciona ao validator.Errors
 
-	userModel := UserModel{DB: h.DB}
+	userModel := models.UserModel{DB: app.db}
 
 	user, err := userModel.GetUserByEmail(form.Email)
 	if err != nil {
@@ -173,7 +160,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	data := render.TemplateData{
 		Validator: form.Validator,
-		User: User{
+		User: models.User{
 			Email: form.Email,
 		},
 	}
@@ -195,20 +182,20 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.SessionManager.RenewToken(r.Context())
+	err = app.sessionManager.RenewToken(r.Context())
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
-	h.SessionManager.Put(r.Context(), "authenticatedUserID", user.ID)
+	app.sessionManager.Put(r.Context(), "authenticatedUserID", user.ID)
 
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
 
-func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
-	err := h.SessionManager.Destroy(r.Context())
+func (app *application) UserLogout(w http.ResponseWriter, r *http.Request) {
+	err := app.sessionManager.Destroy(r.Context())
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
