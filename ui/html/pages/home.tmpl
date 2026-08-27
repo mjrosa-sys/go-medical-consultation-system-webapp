@@ -23,7 +23,7 @@
         </div>
 
         <!-- Login Form -->
-        <form id="login-form" action="/login" method="POST" class="auth-form {{if ne .Validator.FormName "register"}}active{{end}}">
+        <form id="login-form" action="/users/login" method="POST" class="auth-form {{if ne .Validator.FormName "register"}}active{{end}}">
             <h3>Account Login</h3>
             
             <div class="form-group">
@@ -46,7 +46,7 @@
         </form>
 
         <!-- Registration Form -->
-        <form id="register-form" action="/register" method="POST" class="auth-form {{if eq .Validator.FormName "register"}}active{{end}}">
+        <form id="register-form" action="/users/register" method="POST" class="auth-form {{if eq .Validator.FormName "register"}}active{{end}}">
             <h3>Create Account</h3>
             
             <!-- Full Name -->

@@ -12,9 +12,9 @@ func (app *application) routes() http.Handler {
 
 	mux.Handle("GET /{$}", app.redirectIfAuthenticated(http.HandlerFunc(home)))
 
-	mux.HandleFunc("POST /register", app.UserRegister)
-	mux.HandleFunc("POST /login", app.UserLogin)
-	mux.HandleFunc("POST /logout", app.UserLogout)
+	mux.HandleFunc("POST /users/register", app.UserRegister)
+	mux.HandleFunc("POST /users/login", app.UserLogin)
+	mux.HandleFunc("POST /users/logout", app.UserLogout)
 
 	mux.Handle("GET /dashboard", app.requireAuthentication(http.HandlerFunc(dashboard)))
 
