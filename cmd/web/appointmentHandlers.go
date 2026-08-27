@@ -1,11 +1,9 @@
-package appointment
+package main
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 
-	"github.com/alexedwards/scs/v2"
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/validator"
 )
 
@@ -17,20 +15,8 @@ type NewAppointmentForm struct {
 	validator.Validator
 }
 
-type Handler struct {
-	DB             *sql.DB
-	SessionManager *scs.SessionManager
-}
-
-func NewHandler(DB *sql.DB, sm *scs.SessionManager) *Handler {
-	return &Handler{
-		DB:             DB,
-		SessionManager: sm,
-	}
-}
-
-func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
-	//	doctorID := h.SessionManager.GetInt(r.Context(), "authenticatedUserID")
+func (app *application) AppointmentCreate(w http.ResponseWriter, r *http.Request) {
+	//	doctorID := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
 	//	if doctorID == 0 {
 	//		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 	//		return
