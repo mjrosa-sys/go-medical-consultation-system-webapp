@@ -43,7 +43,21 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		Notes:              r.PostForm.Get("notes"),
 	}
 
+	form.SetFormName("NewAppointment")
+
+	form.CheckField(validator.NotBlank(form.PatientName), "PatientName", "Patient name is required")
+	form.CheckField(validator.MaxChars(form.PatientName, 100), "PatientName", "Patient name cannot be more than 100 characters long")
+
+	form.CheckField(validator.NotBlank(form.AssignedDoctorName), "AssignedDoctorName", "Doctor name is required")
+	form.CheckField(validator.MaxChars(form.AssignedDoctorName, 100), "AssignedDoctorName", "Doctor name cannot be more than 100 characters long")
+
+	form.CheckField(validator.NotBlank(form.DateAndTime), "DateAndTime", "Date & Time is required")
+
+	form.CheckField(validator.NotBlank(form.Notes), "Notes", "Notes is required")
+	form.CheckField(validator.MaxChars(form.Notes, 256), "Notes", "Notes field cannot be more than 256 characters long")
+
 	log.Println("Form data: ", form)
+	log.Println("Form errors: ", form.Errors)
 
 	w.Write([]byte("Inserting a new appointment"))
 }
