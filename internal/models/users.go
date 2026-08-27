@@ -54,3 +54,20 @@ func (u *UserModel) GetUserByEmail(email string) (*User, error) {
 
 	return &user, nil
 }
+
+func (u *UserModel) GetUserRole(ID int) (string, error) {
+	stmt := `SELECT role
+				FROM users
+				WHERE id = ?;`
+
+	row := u.DB.QueryRow(stmt, ID)
+
+	var role string
+
+	err := row.Scan(&role)
+	if err != nil {
+		return err.Error(), err
+	}
+
+	return role, nil
+}
