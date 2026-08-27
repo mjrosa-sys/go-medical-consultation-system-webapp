@@ -12,6 +12,7 @@
         </form>
     </header>
 
+    {{with .User.Role | eq "doctor"}}
     <section class="create-appointment-section" style="background: #ffffff; padding: 1.5rem; border-radius: 6px; border: 1px solid #ddd; margin-bottom: 2rem;">
         <h3 style="margin-top: 0; margin-bottom: 1rem;">Schedule New Appointment</h3>
         <form action="/appointments/create" method="POST" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
@@ -37,6 +38,7 @@
 
         </form>
     </section>
+    {{end}}
 
     <section class="appointments-list">
         <h3>System-Wide Appointments</h3>
