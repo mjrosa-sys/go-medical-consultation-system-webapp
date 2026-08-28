@@ -18,7 +18,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Handle("GET /dashboard", app.requireAuthentication(http.HandlerFunc(app.Dashboard)))
 
-	mux.Handle("POST /appointments/create", app.requireAuthentication(http.HandlerFunc(app.AppointmentCreate)))
+	mux.Handle("POST /appointments/create", app.requireAuthentication(app.authorizeDoctorUser(http.HandlerFunc(app.AppointmentCreate))))
 
-	return commonHeaders(app.sessionManager.LoadAndSave(mux))
+	return app.commonHeaders(app.sessionManager.LoadAndSave(mux))
 }
