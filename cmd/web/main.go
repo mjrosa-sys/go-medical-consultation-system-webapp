@@ -10,6 +10,7 @@ import (
 	"github.com/alexedwards/scs/mysqlstore"
 	"github.com/alexedwards/scs/v2"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/models"
 )
 
 type flags struct {
@@ -18,6 +19,8 @@ type flags struct {
 }
 
 type application struct {
+	userModel      models.UserModel
+	aptmtModel     models.AppointmentModel
 	flags          flags
 	db             *sql.DB
 	sessionManager *scs.SessionManager
@@ -46,6 +49,9 @@ func main() {
 	sessionManager.Cookie.Secure = true
 
 	app.sessionManager = sessionManager
+
+	app.userModel = models.UserModel{DB: app.db}
+	app.aptmtModel = models.AppointmentModel{DB: app.db}
 
 	srv := &http.Server{
 		Addr:         app.flags.port,

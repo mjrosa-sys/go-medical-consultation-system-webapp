@@ -3,8 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-
-	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/models"
 )
 
 func (app *application) commonHeaders(next http.Handler) http.Handler {
@@ -28,9 +26,7 @@ func (app *application) authorizeDoctorUser(next http.Handler) http.Handler {
 			return
 		}
 
-		userModel := models.UserModel{DB: app.db}
-
-		userRole, err := userModel.GetUserRole(doctorID)
+		userRole, err := app.userModel.GetUserRole(doctorID)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, "Error when fetching user role", http.StatusInternalServerError)

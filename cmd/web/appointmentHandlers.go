@@ -74,9 +74,7 @@ func (app *application) AppointmentCreate(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	aptmtModel := models.AppointmentModel{DB: app.db}
-
-	_, err = aptmtModel.Insert(form.PatientName, doctorID, form.Notes, parsedTime)
+	_, err = app.aptmtModel.Insert(form.PatientName, doctorID, form.Notes, parsedTime)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Error when inserting new appointment in the database", http.StatusInternalServerError)

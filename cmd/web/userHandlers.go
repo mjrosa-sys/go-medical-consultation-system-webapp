@@ -78,8 +78,6 @@ func (app *application) UserRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userModel := models.UserModel{DB: app.db}
-
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(form.Password), 14)
 	if err != nil {
 		log.Printf("Password hashing failed\n")
@@ -88,7 +86,7 @@ func (app *application) UserRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := userModel.Insert(form.Name, form.Email, form.Role, string(hashedPassword))
+	id, err := app.userModel.Insert(form.Name, form.Email, form.Role, string(hashedPassword))
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -136,9 +134,7 @@ func (app *application) UserLogin(w http.ResponseWriter, r *http.Request) {
 	// GetUserByEmail. Se não existe, adiciona o erro ao validator.Errors
 	// bcrypt.Compare. Se retornar erro, adiciona ao validator.Errors
 
-	userModel := models.UserModel{DB: app.db}
-
-	user, err := userModel.GetUserByEmail(form.Email)
+	user, err := app.userModel.GetUserByEmail(form.Email)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
