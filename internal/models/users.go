@@ -3,7 +3,6 @@ package models
 import (
 	"database/sql"
 	"errors"
-	"log"
 	"time"
 )
 
@@ -21,17 +20,17 @@ type UserModel struct {
 }
 
 func (u *UserModel) Insert(name, email, role, password string) (int, error) {
-	stmt := "INSERT INTO users (name, email, hashed_password, role) VALUES (?, ?, ?, ?);"
+	stmt := `INSERT INTO
+				users (name, email, hashed_password, role)
+				VALUES (?, ?, ?, ?);`
 
 	result, err := u.DB.Exec(stmt, name, email, password, role)
 	if err != nil {
-		log.Println("1", err)
 		return 0, err
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
-		log.Println("2", err)
 		return 0, err
 	}
 
@@ -39,7 +38,10 @@ func (u *UserModel) Insert(name, email, role, password string) (int, error) {
 }
 
 func (u *UserModel) GetUserByEmail(email string) (*User, error) {
-	stmt := "select id, name, email, hashed_password, role, created_at from users where email = ?;"
+	stmt := `SELECT id, name, email, hashed_password, role, created_at 
+				FROM users 
+				WHERE email = ?;`
+
 	row := u.DB.QueryRow(stmt, email)
 
 	user := User{}
