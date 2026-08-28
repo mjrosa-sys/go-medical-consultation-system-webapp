@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/models"
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/render"
@@ -40,10 +41,15 @@ func (app *application) AppointmentCreate(w http.ResponseWriter, r *http.Request
 
 	form.SetFormName("NewAppointment")
 
-	form.CheckField(validator.NotBlank(form.PatientName), "PatientName", "Patient name is required")
-	form.CheckField(validator.MaxChars(form.PatientName, 100), "PatientName", "Patient name cannot be more than 100 characters long")
+	parsedTime, err := time.Parse("2006-01-02T15:04", form.DateAndTime)
+	if err != nil {
+		form.AddFieldError("DateAndTime", "Invalid date format")
+	}
 
 	form.CheckField(validator.NotBlank(form.DateAndTime), "DateAndTime", "Date & Time is required")
+
+	form.CheckField(validator.NotBlank(form.PatientName), "PatientName", "Patient name is required")
+	form.CheckField(validator.MaxChars(form.PatientName, 100), "PatientName", "Patient name cannot be more than 100 characters long")
 
 	form.CheckField(validator.NotBlank(form.Notes), "Notes", "Notes is required")
 	form.CheckField(validator.MaxChars(form.Notes, 256), "Notes", "Notes field cannot be more than 256 characters long")
@@ -68,8 +74,14 @@ func (app *application) AppointmentCreate(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	// Insere no DB
-	// Redireciona para /dashboard
+	aptmtModel := models.AppointmentModel{DB: app.db}
 
-	w.Write([]byte("Inserting a new appointment"))
+	_, err = aptmtModel.Insert(form.PatientName, doctorID, form.Notes, parsedTime)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Error when inserting new appointment in the database", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
