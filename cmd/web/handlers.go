@@ -34,7 +34,7 @@ func (app *application) Dashboard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := render.TemplateData{
-		User: &models.User{
+		User: models.User{
 			Role: userRole,
 		},
 	}

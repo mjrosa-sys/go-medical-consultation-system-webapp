@@ -20,16 +20,19 @@
             <div>
                 <label for="patient_name" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Patient Name</label>
                 <input type="text" id="patient_name" name="patient_name" placeholder="e.g., Jane Doe" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                {{with $.Validator.Errors.PatientName}}<p style="color: red">{{.}}</p>{{end}}
             </div>
 
             <div>
                 <label for="appointment_time" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Date & Time</label>
                 <input type="datetime-local" id="appointment_time" name="appointment_time" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                {{with $.Validator.Errors.DateAndTime}}<p style="color: red">{{.}}</p>{{end}}
             </div>
 
             <div>
                 <label for="notes" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Notes</label>
                 <input type="text" id="notes" name="notes" placeholder="e.g., Routine checkup" style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                {{with $.Validator.Errors.Notes}}<p style="color: red">{{.}}</p>{{end}}
             </div>
 
             <div>
