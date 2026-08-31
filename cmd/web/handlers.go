@@ -38,7 +38,8 @@ func (app *application) Dashboard(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	if userRole == "doctor" {
+	switch userRole {
+	case "doctor":
 		patients, err := app.userModel.GetAllPatients()
 		if err != nil {
 			log.Println(err)
@@ -56,7 +57,12 @@ func (app *application) Dashboard(w http.ResponseWriter, r *http.Request) {
 		data.Users = patients
 		data.Appointments = aptmts
 
-		log.Println(aptmts)
+	case "patient":
+
+	default:
+		log.Println("Unknown user role: ", err)
+		http.Error(w, "Unknown user role", http.StatusInternalServerError)
+		return
 	}
 
 	templates := []string{

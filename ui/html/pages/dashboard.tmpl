@@ -18,14 +18,14 @@
         <form action="/appointments/create" method="POST" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
         
             <div>
-                <label for="patient_name" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Select Patient</label>
-                <select id="patient_name" name="patient_name" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; background-color: white;">
+                <label for="patient_id" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Select Patient</label>
+                <select id="patient_id" name="patient_id" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; background-color: white;">
                     <option value="" disabled selected>-- Choose a Patient --</option>
                     {{range $.Users}}
-                        <option value="{{.Name}}">{{.Name}} ({{.Email}})</option>
+                        <option value="{{.ID}}">{{.Name}} ({{.Email}})</option>
                     {{end}}
                 </select>
-                {{with $.Validator.Errors.PatientName}}<p style="color: red; margin-top: 0.3rem; margin-bottom: 0;">{{.}}</p>{{end}}
+                {{with $.Validator.Errors.PatientID}}<p style="color: red; margin-top: 0.3rem; margin-bottom: 0;">{{.}}</p>{{end}}
             </div>
         
             <div>
@@ -47,7 +47,6 @@
         </form>
     </section>
     {{end}}
-
 
 
     <section class="appointments-list">

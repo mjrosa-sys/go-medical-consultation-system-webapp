@@ -8,6 +8,7 @@ import (
 
 type Appointment struct {
 	ID                 int
+	PatientID          int
 	PatientName        string
 	DoctorID           int
 	AssignedDoctorName string
@@ -20,12 +21,11 @@ type AppointmentModel struct {
 	DB *sql.DB
 }
 
-func (aptmt *AppointmentModel) Insert(patientName string, doctorID int, notes string, dateAndTime time.Time) (int, error) {
-	stmt := `INSERT INTO
-				appointments (patient_name, doctor_id, notes, date_and_time)
-				VALUES (?, ?, ?, ?);`
+func (aptmt *AppointmentModel) Insert(patientID int, doctorID int, notes string, dateAndTime time.Time) (int, error) {
+	stmt := `INSERT INTO appointments (patient_id, doctor_id, notes, date_and_time)
+            VALUES (?, ?, ?, ?);`
 
-	result, err := aptmt.DB.Exec(stmt, patientName, doctorID, notes, dateAndTime)
+	result, err := aptmt.DB.Exec(stmt, patientID, doctorID, notes, dateAndTime)
 	if err != nil {
 		return 0, err
 	}
@@ -42,14 +42,16 @@ func (aptmt *AppointmentModel) GetAllAppointments() ([]Appointment, error) {
 	stmt := `
 		SELECT 
 			a.id, 
-			a.patient_name, 
+			a.patient_id, 
+			p.name AS patient_name, 
 			a.doctor_id, 
-			u.name AS assigned_doctor_name, 
+			d.name AS assigned_doctor_name, 
 			COALESCE(a.notes, '') AS notes, 
 			a.date_and_time, 
 			a.created_at
 		FROM appointments a
-		INNER JOIN users u ON a.doctor_id = u.id
+		INNER JOIN users p ON a.patient_id = p.id
+		INNER JOIN users d ON a.doctor_id = d.id
 		ORDER BY a.date_and_time ASC;`
 
 	rows, err := aptmt.DB.Query(stmt)
@@ -64,6 +66,7 @@ func (aptmt *AppointmentModel) GetAllAppointments() ([]Appointment, error) {
 
 		err := rows.Scan(
 			&a.ID,
+			&a.PatientID,
 			&a.PatientName,
 			&a.DoctorID,
 			&a.AssignedDoctorName,
@@ -84,4 +87,9 @@ func (aptmt *AppointmentModel) GetAllAppointments() ([]Appointment, error) {
 	}
 
 	return appointments, nil
+}
+
+func (aptmt *Appointment) GetAppointmentsByUserId() ([]Appointment, error) {
+
+	return nil, nil
 }
