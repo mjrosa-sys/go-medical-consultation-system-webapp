@@ -58,6 +58,14 @@ func (app *application) Dashboard(w http.ResponseWriter, r *http.Request) {
 		data.Appointments = aptmts
 
 	case "patient":
+		aptmts, err := app.aptmtModel.GetAppointmentsByUserId(userID)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Error when fetching appointments", http.StatusInternalServerError)
+			return
+		}
+
+		data.Appointments = aptmts
 
 	default:
 		log.Println("Unknown user role: ", err)
