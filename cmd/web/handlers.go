@@ -26,9 +26,8 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) Dashboard(w http.ResponseWriter, r *http.Request) {
 	userID := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
-	userModel := models.UserModel{DB: app.db}
 
-	userRole, err := userModel.GetUserRole(userID)
+	userRole, err := app.userModel.GetUserRole(userID)
 	if err != nil {
 		http.Error(w, "Error when fetching user role", http.StatusInternalServerError)
 	}
@@ -37,6 +36,18 @@ func (app *application) Dashboard(w http.ResponseWriter, r *http.Request) {
 		User: models.User{
 			Role: userRole,
 		},
+	}
+
+	if userRole == "doctor" {
+		patients, err := app.userModel.GetAllPatients()
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Error when fetching patients", http.StatusInternalServerError)
+			return
+		}
+
+		data.Users = patients
+		log.Println(patients)
 	}
 
 	templates := []string{

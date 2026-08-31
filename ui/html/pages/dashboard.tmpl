@@ -16,29 +16,34 @@
     <section class="create-appointment-section" style="background: #ffffff; padding: 1.5rem; border-radius: 6px; border: 1px solid #ddd; margin-bottom: 2rem;">
         <h3 style="margin-top: 0; margin-bottom: 1rem;">Schedule New Appointment</h3>
         <form action="/appointments/create" method="POST" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
-
+        
             <div>
-                <label for="patient_name" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Patient Name</label>
-                <input type="text" id="patient_name" name="patient_name" placeholder="e.g., Jane Doe" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-                {{with $.Validator.Errors.PatientName}}<p style="color: red">{{.}}</p>{{end}}
+                <label for="patient_name" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Select Patient</label>
+                <select id="patient_name" name="patient_name" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; background-color: white;">
+                    <option value="" disabled selected>-- Choose a Patient --</option>
+                    {{range $.Users}}
+                        <option value="{{.Name}}">{{.Name}} ({{.Email}})</option>
+                    {{end}}
+                </select>
+                {{with $.Validator.Errors.PatientName}}<p style="color: red; margin-top: 0.3rem; margin-bottom: 0;">{{.}}</p>{{end}}
             </div>
-
+        
             <div>
                 <label for="appointment_time" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Date & Time</label>
                 <input type="datetime-local" id="appointment_time" name="appointment_time" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-                {{with $.Validator.Errors.DateAndTime}}<p style="color: red">{{.}}</p>{{end}}
+                {{with $.Validator.Errors.DateAndTime}}<p style="color: red; margin-top: 0.3rem; margin-bottom: 0;">{{.}}</p>{{end}}
             </div>
-
+        
             <div>
                 <label for="notes" style="display: block; font-weight: bold; margin-bottom: 0.3rem;">Notes</label>
                 <input type="text" id="notes" name="notes" placeholder="e.g., Routine checkup" style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-                {{with $.Validator.Errors.Notes}}<p style="color: red">{{.}}</p>{{end}}
+                {{with $.Validator.Errors.Notes}}<p style="color: red; margin-top: 0.3rem; margin-bottom: 0;">{{.}}</p>{{end}}
             </div>
-
+        
             <div>
                 <button type="submit" class="btn primary-btn" style="width: 100%; background-color: #0d6efd; color: white; border: none; padding: 0.55rem 1rem; font-weight: bold; border-radius: 4px; cursor: pointer;">Schedule Appointment</button>
             </div>
-
+        
         </form>
     </section>
     {{end}}

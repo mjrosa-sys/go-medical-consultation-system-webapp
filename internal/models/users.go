@@ -73,3 +73,33 @@ func (u *UserModel) GetUserRole(ID int) (string, error) {
 
 	return role, nil
 }
+
+func (m *UserModel) GetAllPatients() ([]User, error) {
+	stmt := `SELECT id, name, email, role, created_at 
+				FROM users 
+				WHERE role = 'patient' 
+				ORDER BY name 
+				ASC;`
+
+	rows, err := m.DB.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var patients []User
+	for rows.Next() {
+		var u User
+		err := rows.Scan(&u.ID, &u.Name, &u.Email, &u.Role, &u.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		patients = append(patients, u)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return patients, nil
+}
