@@ -46,8 +46,17 @@ func (app *application) Dashboard(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		aptmts, err := app.aptmtModel.GetAllAppointments()
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Error when fetching appointments", http.StatusInternalServerError)
+			return
+		}
+
 		data.Users = patients
-		log.Println(patients)
+		data.Appointments = aptmts
+
+		log.Println(aptmts)
 	}
 
 	templates := []string{

@@ -6,8 +6,9 @@ import (
 )
 
 type TemplateData struct {
-	Validator   validator.Validator
-	User        models.User
-	Users       []models.User
-	Appointment models.Appointment
+	Validator    validator.Validator
+	User         models.User
+	Users        []models.User
+	Appointment  models.Appointment
+	Appointments []models.Appointment
 }
