@@ -97,3 +97,34 @@ func (app *application) AppointmentCreate(w http.ResponseWriter, r *http.Request
 
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
+
+func (app *application) AppointmentDelete(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	aptmtID, err := strconv.Atoi(r.PostForm.Get("appointment_id"))
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Appointment ID should be a number", http.StatusBadRequest)
+		return
+	}
+
+	if aptmtID <= 0 {
+		log.Println("Appointment ID should higher than zero")
+		http.Error(w, "Appointment ID should higher than zero", http.StatusBadRequest)
+		return
+	}
+
+	err = app.aptmtModel.DeleteById(aptmtID)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Failed when trying to delete appointment", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+}

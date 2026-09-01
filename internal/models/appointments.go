@@ -140,3 +140,14 @@ func (aptmt *AppointmentModel) GetAppointmentsByUserId(id int) ([]Appointment, e
 
 	return appointments, nil
 }
+
+func (aptmt *AppointmentModel) DeleteById(id int) error {
+	stmt := `DELETE FROM appointments WHERE id = ?;`
+
+	_, err := aptmt.DB.Exec(stmt, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

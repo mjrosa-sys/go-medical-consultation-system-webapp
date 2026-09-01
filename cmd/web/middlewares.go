@@ -43,6 +43,7 @@ func (app *application) authorizeDoctorUser(next http.Handler) http.Handler {
 func (app *application) requireAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !app.sessionManager.Exists(r.Context(), "authenticatedUserID") {
+			log.Println("Not authenticated")
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
