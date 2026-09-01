@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/models"
 	"github.com/mjrosa-sys/go-medical-consultation-system-webapp/internal/render"
 )
 
@@ -27,18 +26,18 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 func (app *application) Dashboard(w http.ResponseWriter, r *http.Request) {
 	userID := app.sessionManager.GetInt(r.Context(), "authenticatedUserID")
 
-	userRole, err := app.userModel.GetUserRole(userID)
+	user, err := app.userModel.GetUserById(userID)
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "Error when fetching user role", http.StatusInternalServerError)
+		return
 	}
 
 	data := render.TemplateData{
-		User: models.User{
-			Role: userRole,
-		},
+		User: *user,
 	}
 
-	switch userRole {
+	switch data.User.Role {
 	case "doctor":
 		patients, err := app.userModel.GetAllPatients()
 		if err != nil {
