@@ -5,7 +5,7 @@
     <header class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <div>
             <h2>Doctor Dashboard</h2>
-            <p style="color: #666;">Logged in as <strong>{{.User.Name}}</strong> (Doctor)</p>
+            <p style="color: #666;">Logged in as <strong>{{.User.Name}}</strong> ({{.User.Role}})</p>
         </div>
         <form action="/users/logout" method="POST" style="margin-left: auto;">
             <button type="submit" class="btn danger-btn" style="background-color: #dc3545; color: white; border: none; padding: 0.4rem 0.8rem; font-size: 0.9rem; border-radius: 4px; cursor: pointer; width: auto;">Log Out</button>
